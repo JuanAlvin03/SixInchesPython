@@ -1,18 +1,14 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sklearn.datasets import load_iris
 
 # Load the dataset
 def load_data():
-    #data = load_iris()
-    # df = pd.DataFrame(data.data, columns=data.feature_names)
-
     dataset_path = 'https://github.com/JuanAlvin03/mitre_attck_dataset/raw/main/mitre_dataset.xlsx'
     dataset = pd.read_excel(dataset_path, sheet_name="relationships")  # relationships is sheet name, header true
-
     return dataset
 
+# Not used yet
 def plot_scatter(df, selected_species, x_feature, y_feature):
     if selected_species:
         filtered_df = df[df['species'].isin(selected_species)]
