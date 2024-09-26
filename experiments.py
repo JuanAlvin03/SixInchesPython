@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from matplotlib.pyplot import xlabel, ylabel
+
 
 # Load Group Table
 def load_group_data():
@@ -63,7 +65,11 @@ def plot_bar(df, selected_type, selected_platform):
     top10 = software_usage_count_by_groups.head(10)
     # this means 'Mimikatz' software is used by 46 out of 136 groups
 
-    fig = px.bar(filtered_df, x=top10.index, y=top10.values, color=top10.values, title="Bar chart of Most used Softwares by Adversary Groups")
+    fig = px.bar(filtered_df, x=top10.index, y=top10.values, color=top10.values, title="Bar chart of Most used Softwares by Adversary Groups",
+        labels={
+            'x': 'Software Name',
+            'y': 'Number of Groups (out of 136)'
+        })
 
     st.plotly_chart(fig)
 
