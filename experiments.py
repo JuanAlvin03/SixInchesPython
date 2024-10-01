@@ -57,6 +57,10 @@ def plot_bar(df, selected_type, selected_platform):
     else:
         filtered_df = filtered_df
 
+    if filtered_df.empty:
+        st.warning("No data available for the selected filters.")
+        return  # Exit the function early
+
     one_hot_encoded = filtered_df['target name']
     one_hot_encoded = one_hot_encoded.str.get_dummies()
     software_usage_count_by_groups = one_hot_encoded.sum()
@@ -64,6 +68,10 @@ def plot_bar(df, selected_type, selected_platform):
 
     top10 = software_usage_count_by_groups.head(10)
     # this means 'Mimikatz' software is used by 46 out of 136 groups
+
+    if top10.empty:
+        st.warning("No software usage data found for the selected filters.")
+        return
 
     fig = px.bar(filtered_df, x=top10.index, y=top10.values, color=top10.values, title="Bar chart of Most used Softwares by Adversary Groups",
         labels={

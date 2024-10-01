@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3b6dc4b-5a85-4159-b355-33940a0a16db" name="Changes" comment="experiments can filter">
+    <list default="true" id="b3b6dc4b-5a85-4159-b355-33940a0a16db" name="Changes" comment="label axis in experiments.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiments.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiments.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -94,13 +95,22 @@
       <option name="project" value="LOCAL" />
       <updated>1727323868149</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="label axis in experiments.py">
+      <option name="closed" value="true" />
+      <created>1727326164934</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727326164934</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First Commit" />
     <MESSAGE value="streamlit n plotly on app.py" />
     <MESSAGE value="experiments can filter" />
-    <option name="LAST_COMMIT_MESSAGE" value="experiments can filter" />
+    <MESSAGE value="label axis in experiments.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="label axis in experiments.py" />
   </component>
 </project>
