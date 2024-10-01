@@ -29,7 +29,7 @@ software_use_tech_df = uses_df[uses_df['source type'] == 'software']
 
 # group_use_software_df.count() # must be 921
 # group_use_tech_df.count() # must be 3387
-#software_use_tech_df.count() # must be 8967
+# software_use_tech_df.count() # must be 8967
 
 # number of 'unique' groups # 136
 # print(group_use_software_df['source name'].nunique())

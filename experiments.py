@@ -40,40 +40,18 @@ def load_relationship_data():
 
 
 #
-def plot_bar(df, selected_type, selected_platform):
-    if selected_type:
-        #filtered_df = df[df['type'].isin(selected_type)]
-        #pattern = '|'.join(selected_type)
-        #filtered_df = df[df['type'].str.contains(pattern, na=False)]
-        filtered_df = df[df['type'].str.contains(selected_type, na=False)]
-    else:
-        filtered_df = df
-
-    if selected_platform:
-        #filtered_df = filtered_df[filtered_df['platforms'].isin(selected_platform)]
-        #pattern = '|'.join(selected_platform)
-        #filtered_df = filtered_df[filtered_df['platforms'].str.contains(pattern, na=False)]
-        filtered_df = filtered_df[filtered_df['platforms'].str.contains(selected_platform, na=False)]
-    else:
-        filtered_df = filtered_df
-
-    if filtered_df.empty:
+def plot_scatter(df):
+    if df.empty:
         st.warning("No data available for the selected filters.")
         return  # Exit the function early
 
-    one_hot_encoded = filtered_df['target name']
+    one_hot_encoded = df['target name']
     one_hot_encoded = one_hot_encoded.str.get_dummies()
     software_usage_count_by_groups = one_hot_encoded.sum()
     software_usage_count_by_groups.sort_values(ascending=False, inplace=True)
 
-    top10 = software_usage_count_by_groups.head(10)
-    # this means 'Mimikatz' software is used by 46 out of 136 groups
 
-    if top10.empty:
-        st.warning("No software usage data found for the selected filters.")
-        return
-
-    fig = px.bar(filtered_df, x=top10.index, y=top10.values, color=top10.values, title="Bar chart of Most used Softwares by Adversary Groups",
+    fig = px.bar(df, x="top10.index", y={"top10.values"}, color="top10.values", title="Bar chart of Most used Softwares by Adversary Groups",
         labels={
             'x': 'Software Name',
             'y': 'Number of Groups (out of 136)'
@@ -84,14 +62,6 @@ def plot_bar(df, selected_type, selected_platform):
 def main():
     dataset = load_relationship_data()
     st.title('MITRE ATT&CK')
-
-    #species_options = dataset['species'].unique().tolist()
-    #default_species = species_options
-    #selected_species = st.multiselect('Select Species', options=species_options, default=default_species)
-
-    # Use all feature columns for the selectbox
-    # x_feature = st.selectbox('Select X-axis Feature', options=df.columns[:-1], index=0)  # Exclude 'species'
-    # y_feature = st.selectbox('Select Y-axis Feature', options=df.columns[:-1], index=1)  # Exclude 'species'
 
     # filter data that has 'uses' as value of 'mapping type'
     uses_df = dataset[dataset['mapping type'] == 'uses']
@@ -112,34 +82,21 @@ def main():
 
     #==============================================================================
 
-    software_table = load_software_data()
+    technique_table = load_technique_data()
+
     # merge
-    # group_use_software_df = group_use_software_df.merge(group_table, left_on='source ID', right_on='ID')
-    # group_use_software_df.drop(['name', 'ID', 'domain', 'mapping description'], axis=1, inplace=True)
-    group_use_software_df = group_use_software_df.merge(software_table, left_on='target ID', right_on='ID')
-    group_use_software_df.drop(['name', 'ID', 'domain'], axis=1, inplace=True)
+    software_use_tech_df = software_use_tech_df.merge(technique_table, left_on='target ID', right_on='ID')
+    software_use_tech_df.drop(['name', 'ID', 'domain'], axis=1, inplace=True)
 
-    type_options = group_use_software_df['type'].unique().tolist()
-    #default_type = ""
-    selected_type = st.selectbox('Select Type', options=type_options, index=None,
-    placeholder="Select Type...",)
-
-    one_hot_encoded = group_use_software_df['platforms']
+    one_hot_encoded = software_use_tech_df['platforms']
     one_hot_encoded = one_hot_encoded.str.get_dummies(sep=', ')
     #platform_counts = one_hot_encoded.sum()
 
-    platforms_options = one_hot_encoded.columns.tolist()
-    #default_platform = ""
-    selected_platform = st.selectbox('Select Platform', options=platforms_options, index=None,
-    placeholder="Select Platforms...",)
 
-    plot_bar(group_use_software_df, selected_type, selected_platform)
+    plot_scatter(software_use_tech_df)
 
-    #fig = px.bar(top10, x=top10.index, y=top10.values, color=top10.values, title="Mitre Att&ck")
     #st.plotly_chart(fig)
 
-    # try to show which one is malware/tools
-    # maybe platforms too
     # plot_scatter(df, selected_species, x_feature, y_feature)
 
 if __name__ == "__main__":
