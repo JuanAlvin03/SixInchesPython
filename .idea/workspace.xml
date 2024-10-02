@@ -118,7 +118,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727790165022</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="experimenting on experiments.py">
+      <option name="closed" value="true" />
+      <created>1727841107891</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727841107891</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

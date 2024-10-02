@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.express as px
 from matplotlib.pyplot import xlabel, ylabel
 
-
 # Load Group Table
 def load_group_data():
     dataset_path = 'https://github.com/JuanAlvin03/mitre_attck_dataset/raw/main/mitre_dataset.xlsx'
@@ -45,20 +44,47 @@ def plot_bar(df):
         st.warning("No data available for the selected filters.")
         return  # Exit the function early
 
-    one_hot_encoded = df['target name']
-    one_hot_encoded = one_hot_encoded.str.get_dummies()
-    tech_usage_count_by_group = one_hot_encoded.sum()
-    tech_usage_count_by_group.sort_values(ascending=False, inplace=True)
+    #one_hot_encoded = df['target name']
+    #one_hot_encoded = one_hot_encoded.str.get_dummies()
+    #tech_usage_count_by_group = one_hot_encoded.sum()
+    #tech_usage_count_by_group.sort_values(ascending=False, inplace=True)
+    # top10grouptech = tech_usage_count_by_group.head(10)
 
-    top10grouptech = tech_usage_count_by_group.head(10)
+    one_hot_encoded = df['tactics']
+    one_hot_encoded = one_hot_encoded.str.get_dummies(sep=', ')
+    tactics_counts = one_hot_encoded.sum()
+    # Determine the index of the largest segment
+    largest_index = tactics_counts.idxmax()
+    #smallest_index = tactics_counts.idxmin()
 
-    fig = px.bar(df, x=top10grouptech.index, y=top10grouptech.values, color=top10grouptech.values, title="Bar chart of Most used Techniques by Groups",
-        labels={
-            'x': 'Techniques Name',
-            'y': 'Number of Groups (out of ...)'
-        })
+    # Create the pull array
+    pull = [0.1 if tactic == largest_index else 0 for tactic in tactics_counts.index]
 
-    st.plotly_chart(fig)
+    fig = px.pie(
+        df,
+        values=tactics_counts.values,
+        names=tactics_counts.index,
+        title='Pie Chart',
+    )
+    # fig = px.bar(df, x=tactics_counts.index, y=tactics_counts.values, color=tactics_counts.values, title="Bar chart of Most used Techniques by Groups",
+        #labels={
+            #'x': 'Techniques Name',
+            #'y': 'Number of Groups (out of ...)'
+        #})
+    fig = px.pie(df, values=tactics_counts.values, names=tactics_counts.index, title='Pie Chart', )
+    fig.update_traces(pull=pull)
+    #fig.update_traces(
+    #    hovertemplate='%{label}: %{percent:.1%}<extra></extra>',  # Custom hover text
+    #    hoverlabel=dict(
+    #        font=dict(size=16),  # Change the font size
+    #        bgcolor="white",  # Background color of the hover label
+    #        bordercolor="black"  # Border color of the hover label
+    #    )
+    #)
+
+    fig.update_layout(width=800, height=600)
+
+    st.plotly_chart(fig, use_container_width=True)
 
 def main():
     dataset = load_relationship_data()
@@ -84,6 +110,9 @@ def main():
     #==============================================================================
 
     technique_table = load_technique_data()
+
+    software_use_tech_df = software_use_tech_df.merge(technique_table, left_on='target ID', right_on='ID')
+    software_use_tech_df.drop(['name', 'ID', 'name', 'mapping description', 'source type', 'target type', 'mapping type'], axis=1, inplace=True)
 
     # merge
     group_use_tech_df = group_use_tech_df.merge(technique_table, left_on='target ID', right_on='ID')
