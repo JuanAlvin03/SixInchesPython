@@ -40,21 +40,22 @@ def load_relationship_data():
 
 
 #
-def plot_scatter(df):
+def plot_bar(df):
     if df.empty:
         st.warning("No data available for the selected filters.")
         return  # Exit the function early
 
     one_hot_encoded = df['target name']
     one_hot_encoded = one_hot_encoded.str.get_dummies()
-    software_usage_count_by_groups = one_hot_encoded.sum()
-    software_usage_count_by_groups.sort_values(ascending=False, inplace=True)
+    tech_usage_count_by_group = one_hot_encoded.sum()
+    tech_usage_count_by_group.sort_values(ascending=False, inplace=True)
 
+    top10grouptech = tech_usage_count_by_group.head(10)
 
-    fig = px.bar(df, x="top10.index", y={"top10.values"}, color="top10.values", title="Bar chart of Most used Softwares by Adversary Groups",
+    fig = px.bar(df, x=top10grouptech.index, y=top10grouptech.values, color=top10grouptech.values, title="Bar chart of Most used Techniques by Groups",
         labels={
-            'x': 'Software Name',
-            'y': 'Number of Groups (out of 136)'
+            'x': 'Techniques Name',
+            'y': 'Number of Groups (out of ...)'
         })
 
     st.plotly_chart(fig)
@@ -85,15 +86,14 @@ def main():
     technique_table = load_technique_data()
 
     # merge
-    software_use_tech_df = software_use_tech_df.merge(technique_table, left_on='target ID', right_on='ID')
-    software_use_tech_df.drop(['name', 'ID', 'domain'], axis=1, inplace=True)
+    group_use_tech_df = group_use_tech_df.merge(technique_table, left_on='target ID', right_on='ID')
+    group_use_tech_df.drop(['name', 'ID', 'domain', 'mapping type', 'target type', 'source type', 'mapping description'], axis=1, inplace=True)
 
-    one_hot_encoded = software_use_tech_df['platforms']
-    one_hot_encoded = one_hot_encoded.str.get_dummies(sep=', ')
+    #one_hot_encoded = software_use_tech_df['platforms']
+    #one_hot_encoded = one_hot_encoded.str.get_dummies(sep=', ')
     #platform_counts = one_hot_encoded.sum()
 
-
-    plot_scatter(software_use_tech_df)
+    plot_bar(group_use_tech_df)
 
     #st.plotly_chart(fig)
 
