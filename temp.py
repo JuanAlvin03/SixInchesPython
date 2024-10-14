@@ -1,9 +1,10 @@
 import streamlit as st
 import plotly.express as px
+import pandas as pd
 from loaddata import load_group_data, load_software_data, load_technique_data, load_relationship_data
 
 # First plot function (Pie chart for tactics)
-def plot_bar(df):
+def plot_pie(df):
     if df.empty:
         st.warning("No data available for the selected filters.")
         return
@@ -26,7 +27,7 @@ def plot_bar(df):
     st.plotly_chart(fig, use_container_width=True)
 
 # Second plot function (Bar chart for software usage)
-def plot_bar2(df, selected_type=None, selected_platform=None):
+def plot_bar(df, selected_type=None, selected_platform=None):
     if selected_type:
         filtered_df = df[df['type'].str.contains(selected_type, na=False)]
     else:
@@ -50,13 +51,30 @@ def plot_bar2(df, selected_type=None, selected_platform=None):
         st.warning("No software usage data found for the selected filters.")
         return
 
+    top10_df = pd.DataFrame({
+        'Software Name': top10.index,
+        'Number of Groups': top10.values
+    })
+
+    # Get group information for each software
+    group_info_dict = filtered_df.groupby('target name')['source name'].apply(list).to_dict()
+    top10_df['Groups'] = top10_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, [])))
+
+    #top10_df['Groups Str'] = top10_df['Groups'].apply(lambda x: ', '.join(x))
+
+    # Create the bar chart
     fig = px.bar(
-        x=top10.index,
-        y=top10.values,
-        color=top10.values,
+        top10_df,
+        x='Software Name',
+        y='Number of Groups',
+        color='Number of Groups',
         title="Which Software Is Most Frequently Used by Adversary Groups?",
-        labels={'x': 'Software Name', 'y': 'Number of Groups'}
+        labels={'x': 'Software Name', 'y': 'Number of Groups'},
+        custom_data=top10_df[['Groups']]  # Include groups in custom data
     )
+
+    # Update the hover template to display the custom data
+    fig.update_traces(hovertemplate="<b>Software:</b> %{x}<br><b>Number of Groups:</b> %{y}<br><b>Groups:</b> %{customdata[0]}<extra></extra>")
 
     st.plotly_chart(fig)
 
@@ -81,7 +99,7 @@ def main():
     platforms_options = one_hot_encoded.columns.tolist()
     selected_platform = st.selectbox('Select Platform', options=platforms_options, index=None, placeholder="Select Platforms...")
 
-    plot_bar2(group_use_software_df, selected_type, selected_platform)
+    plot_bar(group_use_software_df, selected_type, selected_platform)
 
 # Experiment visualization logic
 def experiments():
@@ -96,7 +114,7 @@ def experiments():
     group_use_tech_df = group_use_tech_df.merge(technique_table, left_on='target ID', right_on='ID')
     group_use_tech_df.drop(['name', 'ID', 'domain', 'mapping type', 'target type', 'source type', 'mapping description'], axis=1, inplace=True)
 
-    plot_bar(group_use_tech_df)
+    plot_pie(group_use_tech_df)
 
 # Sidebar navigation
 st.sidebar.title("Menu")
