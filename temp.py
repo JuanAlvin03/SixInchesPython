@@ -27,7 +27,7 @@ def plot_pie(df):
     st.plotly_chart(fig, use_container_width=True)
 
 # Second plot function (Bar chart for software usage)
-def plot_bar(df, selected_type=None, selected_platform=None):
+def plot_bar(df, selected_type=None, selected_platform=None, num_bars=10):
     if selected_type:
         filtered_df = df[df['type'].str.contains(selected_type, na=False)]
     else:
@@ -45,32 +45,32 @@ def plot_bar(df, selected_type=None, selected_platform=None):
     software_usage_count_by_groups = one_hot_encoded.sum()
     software_usage_count_by_groups.sort_values(ascending=False, inplace=True)
 
-    top10 = software_usage_count_by_groups.head(10)
+    # Limit to the specified number of top bars
+    top_n = software_usage_count_by_groups.head(num_bars)
 
-    if top10.empty:
+    if top_n.empty:
         st.warning("No software usage data found for the selected filters.")
         return
 
-    top10_df = pd.DataFrame({
-        'Software Name': top10.index,
-        'Number of Groups': top10.values
+    top_n_df = pd.DataFrame({
+        'Software Name': top_n.index,
+        'Number of Groups': top_n.values
     })
 
     # Get group information for each software
     group_info_dict = filtered_df.groupby('target name')['source name'].apply(list).to_dict()
-    top10_df['Groups'] = top10_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, [])))
-
-    #top10_df['Groups Str'] = top10_df['Groups'].apply(lambda x: ', '.join(x))
+    #top10_df['Groups'] = top10_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, [])))
+    top_n_df['Groups'] = top_n_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, [])[:5]))
 
     # Create the bar chart
     fig = px.bar(
-        top10_df,
+        top_n_df,
         x='Software Name',
         y='Number of Groups',
         color='Number of Groups',
         title="Which Software Is Most Frequently Used by Adversary Groups?",
         labels={'x': 'Software Name', 'y': 'Number of Groups'},
-        custom_data=top10_df[['Groups']]  # Include groups in custom data
+        custom_data=top_n_df[['Groups']]  # Include groups in custom data
     )
 
     # Update the hover template to display the custom data
@@ -99,7 +99,11 @@ def main():
     platforms_options = one_hot_encoded.columns.tolist()
     selected_platform = st.selectbox('Select Platform', options=platforms_options, index=None, placeholder="Select Platforms...")
 
-    plot_bar(group_use_software_df, selected_type, selected_platform)
+    # Add a slider for selecting the number of bars to display
+    max_bars = min(20, group_use_software_df['target name'].nunique())  # Limit to max 20 or available software
+    num_bars = st.slider('Select Number of Bars to Display', 1, max_bars, 10)  # Default to 10
+
+    plot_bar(group_use_software_df, selected_type, selected_platform, num_bars)
 
 # Experiment visualization logic
 def experiments():
