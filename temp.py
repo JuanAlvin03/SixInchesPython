@@ -62,6 +62,11 @@ def plot_bar(df, selected_type=None, selected_platform=None, num_bars=10):
     #top10_df['Groups'] = top10_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, []))) show all groups
     top_n_df['Groups'] = top_n_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, [])[:5]))
 
+    # Calculate the frequency of each group only for the software that appears in the chart
+    selected_software = top_n_df['Software Name'].tolist()
+    relevant_groups_df = filtered_df[filtered_df['target name'].isin(selected_software)]
+    group_frequency = relevant_groups_df['source name'].value_counts().head(3)
+
     # Create the bar chart
     fig = px.bar(
         top_n_df,
@@ -77,6 +82,11 @@ def plot_bar(df, selected_type=None, selected_platform=None, num_bars=10):
     fig.update_traces(hovertemplate="<b>Software:</b> %{x}<br><b>Number of Groups:</b> %{y}<br><b>Groups:</b> %{customdata[0]}<extra></extra>")
 
     st.plotly_chart(fig)
+
+    # Display top 3 groups separately
+    st.subheader("Top 3 Groups Appearing for Selected Software")
+    for idx, (group, count) in enumerate(group_frequency.items(), start=1):
+        st.write(f"{idx}. {group}: {count} occurrences")
 
     # Display full list of groups on click
     selected_software = st.selectbox('Select Software for Full Group List', options=top_n_df['Software Name'].tolist(),
