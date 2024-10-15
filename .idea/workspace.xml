@@ -151,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728954164049</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="only 5 groups shown on hover, also added slider to choose number of bars shown">
+      <option name="closed" value="true" />
+      <created>1728958875945</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1728958875945</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

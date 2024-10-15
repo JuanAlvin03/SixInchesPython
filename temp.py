@@ -78,6 +78,18 @@ def plot_bar(df, selected_type=None, selected_platform=None, num_bars=10):
 
     st.plotly_chart(fig)
 
+    # Display full list of groups on click
+    selected_software = st.selectbox('Select Software for Full Group List', options=top_n_df['Software Name'].tolist(),
+                                     index=0)
+
+    if selected_software:
+        full_groups = group_info_dict.get(selected_software, [])
+        with st.expander("Full List of Groups", expanded=False):
+            if full_groups:
+                st.write(', '.join(full_groups))
+            else:
+                st.warning("No groups found for this software.")
+
 # Main visualization logic
 def main():
     dataset = load_relationship_data()
