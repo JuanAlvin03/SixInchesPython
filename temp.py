@@ -59,7 +59,7 @@ def plot_bar(df, selected_type=None, selected_platform=None, num_bars=10):
 
     # Get group information for each software
     group_info_dict = filtered_df.groupby('target name')['source name'].apply(list).to_dict()
-    #top10_df['Groups'] = top10_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, [])))
+    #top10_df['Groups'] = top10_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, []))) show all groups
     top_n_df['Groups'] = top_n_df['Software Name'].map(lambda x: ', '.join(group_info_dict.get(x, [])[:5]))
 
     # Create the bar chart
