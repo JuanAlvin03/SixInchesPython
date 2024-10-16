@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3b6dc4b-5a85-4159-b355-33940a0a16db" name="Changes" comment="added option to display full list of groups">
+    <list default="true" id="b3b6dc4b-5a85-4159-b355-33940a0a16db" name="Changes" comment="added top 3 groups that appears most often in the chart">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/temp.py" beforeDir="false" afterPath="$PROJECT_DIR$/temp.py" afterDir="false" />
     </list>
@@ -167,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728959628117</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="added top 3 groups that appears most often in the chart">
+      <option name="closed" value="true" />
+      <created>1729035664326</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1729035664326</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -181,6 +189,7 @@
     <MESSAGE value="group names shown on bar chart hover, but messy" />
     <MESSAGE value="only 5 groups shown on hover, also added slider to choose number of bars shown" />
     <MESSAGE value="added option to display full list of groups" />
-    <option name="LAST_COMMIT_MESSAGE" value="added option to display full list of groups" />
+    <MESSAGE value="added top 3 groups that appears most often in the chart" />
+    <option name="LAST_COMMIT_MESSAGE" value="added top 3 groups that appears most often in the chart" />
   </component>
 </project>

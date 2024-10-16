@@ -116,14 +116,24 @@ def main():
     type_options = group_use_software_df['type'].unique().tolist()
     selected_type = st.selectbox('Select Type', options=type_options, index=None, placeholder="Select Type...")
 
-    one_hot_encoded = group_use_software_df['platforms']
-    one_hot_encoded = one_hot_encoded.str.get_dummies(sep=', ')
-    platforms_options = one_hot_encoded.columns.tolist()
-    selected_platform = st.selectbox('Select Platform', options=platforms_options, index=None, placeholder="Select Platforms...")
+    platforms_options = ["Windows", "Linux", "macOS"]
+    default_index = 0
+
+    selected_platform = st.selectbox(
+        'Select Platform',
+        options=platforms_options,
+        index=default_index,
+        placeholder="Select Platforms..."
+    )
+
+    #one_hot_encoded = group_use_software_df['platforms']
+    #one_hot_encoded = one_hot_encoded.str.get_dummies(sep=', ')
+    #platforms_options = one_hot_encoded.columns.tolist()
+    #selected_platform = st.selectbox('Select Platform', options=platforms_options, index=None, placeholder="Select Platforms...")
 
     # Add a slider for selecting the number of bars to display
     max_bars = min(20, group_use_software_df['target name'].nunique())  # Limit to max 20 or available software
-    num_bars = st.slider('Select Number of Bars to Display', 1, max_bars, 10)  # Default to 10
+    num_bars = st.slider('Select Number of Bars to Display', 5, max_bars, 10)  # Default to 10
 
     plot_bar(group_use_software_df, selected_type, selected_platform, num_bars)
 
